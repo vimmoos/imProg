@@ -13,26 +13,19 @@
 
 int Rnumber (int x){
     int Rx=0;
-    while (x!= 0){
-        Rx = Rx*10;
-        Rx = Rx+(x%10);
+    while (x>0){
+        Rx = Rx*10+(x%10);
         x = x/10;
     }
     return Rx;
 }
 
-int multipal (int x,int n,int X){
-    for (int k=1;k*k<=X/k;k++){
-        if ( X%k==0 && X/k==x) n=n+1;
-    }
-    return n;
-}
 
 int recursion (int a,int b){
     int x=a,n=0;
     while(x<=b){
         int X = Rnumber(x);
-        n = multipal(x,n,X);
+        if (X%x==0) n=n+1;
         x++;
     }
     return n;

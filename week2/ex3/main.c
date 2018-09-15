@@ -36,16 +36,28 @@ int divider (int b,int c, int n, int a){
 }
 
 int recursion (int a,int b,int c,int n){
-
-    
-    for(int x=b;x<=a/x;x++){
-        if ((a%x==0)) {
-            n++;
-            n = divider(x,c,n,a);
-             if (sqroot(a/x)!=0) n++;
-                        
+    int x=1,y=1,z=1;
+    while(x<=a){
+        printf("first loop\n");
+        while(y<=x/y){
+            printf("====second loop\n");
+            while(z<=y/z){
+                printf("=======third loop\t\t\t%d\t\t%d\t\t%d\n",x,y,z);
+                if(z*x*y==a) n=n+1;
+                z=z+1;
+            }
+            y=y+1;
         }
+        x=x+1;
     }
+    // for(int x=b;x<=a/x;x++){
+    //     if ((a%x==0)) {
+    //         n++;
+    //         n = divider(x,c,n,a);
+    //          if (sqroot(a/x)!=0) n++;
+                        
+    //     }
+    // }
     
     return n;
 }
