@@ -10,63 +10,30 @@
 #include <stdlib.h>
 
 
-int sqroot(int k){
-    int x=1;
-    while (x*x<k) x++;
-    return x*x==k ? x : 0;
-}
 
-int divider (int b,int c, int n, int a){
-    while (c<=b/c && c<=(a/b)/c){
-        if (b%c==0 && (a/b)/c!=b/c && sqroot(b)!=c && sqroot(a)!=b) n++;
-        if ((a/b)%c==0 && (a/b)/c!=b/c && sqroot(b)!=c && sqroot(a)!=b) n++;
-        c++;
-    }
-    // for (int x=b;x<=a/x;x++){
-    //     if(a%x==0) {
-    //         c++;
-    //     // if((d/a)%x==0 && (d/a)/x!=a/x) c++;
-    //         if (sqroot(a/x)!=0) c++;
-    //         if (sqroot(x)!=0 && sqroot(x)!=sqroot(a) ) c++;
- 
-    //     }
-        
-    // }
-    return n;
-}
 
-int recursion (int a,int b,int c,int n){
-    int x=1,y=1,z=1;
-    while(x<=a){
-        printf("first loop\n");
-        while(y<=x/y){
-            printf("====second loop\n");
-            while(z<=y/z){
-                printf("=======third loop\t\t\t%d\t\t%d\t\t%d\n",x,y,z);
-                if(z*x*y==a) n=n+1;
-                z=z+1;
+int recursion (int a,int n){
+    for (int k=1;k<=a/2;k++){
+        if(a%k==0){
+            // printf("first\n");
+            for (int x=1;x<=k;x++){
+                if((a/k)%x==0 ){
+                    // printf("==========second\n");  
+                    for(int y=1;y<=x;y++){
+                        // printf("====================third\t\t\t%d\t\t\t\t%d\t\t\t\t%d\t\t\t%d\n",k,x,y,k*x*y);
+                        if(x*y*k==a) n++;
+                    }
+                }  
             }
-            y=y+1;
         }
-        x=x+1;
+        
     }
-    // for(int x=b;x<=a/x;x++){
-    //     if ((a%x==0)) {
-    //         n++;
-    //         n = divider(x,c,n,a);
-    //          if (sqroot(a/x)!=0) n++;
-                        
-    //     }
-    // }
-    
     return n;
 }
-
 
 int main (int argc, char** argv){
-    int k , b=2 , c=2 , n=1;
-    scanf("%d",&k);
-    int q = recursion(k,b,c,n);
-    printf("%d\n",  q);
+    int R , n=1;
+    scanf("%d",&R);
+    printf("%d\n", recursion(R,n));
     return 0; 
 }
