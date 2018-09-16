@@ -25,7 +25,7 @@ int sqfree(int k){
     return  k==0 || (x*x)%k==0 ? 0 : 1 ;
 }
 
-//just print the solution 
+//the main just print the solution 
 
 int main (int argc, char** argv){
     int k;

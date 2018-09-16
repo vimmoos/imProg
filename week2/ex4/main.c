@@ -10,7 +10,7 @@
 #include <stdlib.h>
 
  
-
+//this int func reverse a number 
 int Rnumber (int x){
     int Rx=0;
     while (x>0){
@@ -20,8 +20,8 @@ int Rnumber (int x){
     return Rx;
 }
 
-
-int recursion (int a,int b){
+//this int func calculate how many multipals there are in the interval between a and b
+int mulpals (int a,int b){
     int x=a,n=0;
     while(x<=b){
         int X = Rnumber(x);
@@ -30,10 +30,10 @@ int recursion (int a,int b){
     }
     return n;
 }
-
+//the main func just scan and print the result
 int main (int argc, char** argv){
     int a,b;
     scanf("%d %d",&a,&b);
-    printf("%d\n",recursion(a,b));
+    printf("%d\n",mulpals(a,b));
     return 0; 
 }
