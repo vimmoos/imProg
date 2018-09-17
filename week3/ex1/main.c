@@ -61,5 +61,6 @@ int main (int argc, char** argv){
         i++;
     } while( c[i-1] != '=');        
     printf("%d",recursion(x,c,0));
+    free(c);
     return 0; 
 }
