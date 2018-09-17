@@ -26,7 +26,7 @@ int Prime (int num){
 int superPrime (int num,int *p){
     int SP=0;
     int *digits=intAlloc(10);
-    if (fDigitConstraint(num%10,num%100)==1){
+    if (fDigitConstraint(num%10,num%100)==1 && Prime(num)==1){
         while (num>0){
             digits[SP]=num%10;
             SP++;
@@ -41,7 +41,7 @@ int superPrime (int num,int *p){
 int nSuperPrime (int n) {
     int x=0,result;
     for (int i=1;x<=n;i++){
-        if(Prime(i)==1) result = superPrime(i,&x);
+         result = superPrime(i,&x);
     }
     return result;
 }
