@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "../../lib/utils.h"
-
+// this function return the sum of all divisor of n 
 int divisorOfN (int n){
     int sum=0;
     for (int i=n/2;i>=1;i--){
@@ -18,11 +18,10 @@ int divisorOfN (int n){
     }
     return sum;
 } 
-
+//just scan and print yes if the sum of the divisor is equal to the reverse input number
 int main (int argc, char** argv){
     int x;
     scanf("%d",&x);
-    int sum = divisorOfN(x);
-    printf("%s\n",Revertnumber(x)==sum ? "YES" : "NO");
+    printf("%s\n",Revertnumber(x)==divisorOfN(x) ? "YES" : "NO");
     return 0; 
 }

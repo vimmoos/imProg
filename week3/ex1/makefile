@@ -2,7 +2,7 @@
 
 CC = gcc
 CFLAGS = --pedantic -Wall -O2
-LIBS = ../../lib/arrLib.c ./lib/utils.c
+LIBS = ../../lib/arrLib.c ../../lib/utils.c
 
 all: dev
 
@@ -13,3 +13,4 @@ clean:
 	rm -f *~
 	rm -f #*#
 	rm -f *.o
+	

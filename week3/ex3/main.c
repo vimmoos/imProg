@@ -43,8 +43,8 @@ int dropedDigit (int *d, int index, int digit ){
     for (int j=index-1;j>=0;j--){
         //finalN is the the number in the normal form without a digit
         finalN=  j!=digit  ? finalN+(d[j]*power(10,(index-1))) : finalN ;
-        // then change the exp for the power func 
-        // in this way every single digit is on a different power of 10 
+        // then change the exponent for the power func 
+        // in this way every single digit will be  on a different power of 10 
         index= j!=digit ? index-1 : index;
     }
     return finalN;
@@ -56,7 +56,7 @@ int prime (int num){
     int root = sqroot(num);
     // remove the edge case 1,2,3 because their root is 1 
     if( root==1 ) return ( num==1 ? 0 : tValue );
-    // remove the even number with the if condition
+    // remove the even number 
     if(num%2!=0){
         //start from 3 and check all the odd number 
         //if one of them is a divisor of num 
@@ -77,9 +77,7 @@ int superPrime (int num){
     int index=0,nPrime=0,tValue=0;
     if (prime(num)==1){
         //malloc *digits with size 10 
-        
         int *digits=intAlloc(10);
-        
         // insert every digits of num
         while (num>0){
             digits[index]=num%10;
@@ -93,6 +91,8 @@ int superPrime (int num){
         }
         //tValue is true only when nPrime it's equal to the lenght of the initial number 
         tValue= nPrime == index ? 1 : 0;
+        // free the pointer digits
+        free(digits);
     }
     return tValue;
 }
@@ -105,8 +105,7 @@ int nSuperPrime (int n) {
         if(superPrime(i)==1){
             result = i;
             x++;
-        }
-        
+        }    
     }
     return result;
 }

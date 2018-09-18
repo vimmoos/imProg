@@ -25,7 +25,8 @@ int hFunction (int x){
     x=(x*x)-x+42;
     return x;
 }
-
+// switch on c[i], call the right function and recall itself 
+// until the char =
 int recursion(int x , char *c,int i){
     switch (c[i]){
         case 'f':
@@ -44,9 +45,7 @@ int recursion(int x , char *c,int i){
             x=recursion(x,c,i);
             break;
         case '=':
-            break;
         default:
-        printf("default");
             break;
     }
     return x;
@@ -55,12 +54,15 @@ int recursion(int x , char *c,int i){
 int main (int argc, char** argv){
     int x,i=0;
     scanf("%d ",&x);
+    // safeMalloc a char pointer with size 10
     char *c=charAlloc(10);
+    // then insert all the sequence of functions until the char =
     do{
         c[i] = getchar();
         i++;
     } while( c[i-1] != '=');        
-    printf("%d",recursion(x,c,0));
+    printf("%d\n",recursion(x,c,0));
+    // free the pointer c 
     free(c);
     return 0; 
 }
