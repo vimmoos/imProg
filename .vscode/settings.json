@@ -3,6 +3,7 @@
         "stdlib.h": "c",
         "stdio.h": "c",
         "arrlib.h": "c",
-        "limits": "c"
+        "limits": "c",
+        "math.h": "c"
     }
 }
