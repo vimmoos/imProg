@@ -82,6 +82,7 @@ int modularSpace (FermatStruct *data){
                 break;
         }
     }else{
+        data->base%=data->module;
         data->temp*=data->base;
         return data->temp;
     }
