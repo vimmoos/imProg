@@ -7,7 +7,7 @@ LIBS = ../../lib/arrLib.c ../../lib/utils.c
 all: dev
 
 dev: $(LIBS)  main.c
-	$(CC) $(CFLAGS) $(LIBS) main.c -o $@ 
+	$(CC) $(CFLAGS) $(LIBS) main.c -o $@ -fopenmp
 
 clean:
 	rm -f *~
