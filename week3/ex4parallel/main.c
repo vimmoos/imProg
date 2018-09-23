@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
 typedef struct FermatStruct {
     int base;
     int expo;
@@ -93,12 +94,20 @@ void runFermat(int num){
         printf("%d is prime.\n",num);
         return;
     }else{
-        for (int i=2;i<num;i++){
-            FermatStruct data = makeFS(i,num);
-            if(modularSpace(&data)%num!=i){
-                printf("%d is a witness for %d.\n",i,num);
-                return; 
-            }
+        int privat_sum,global_sum;
+        #pragma omp parallel private(privat_sum )
+        {   
+            privat_sum=0;
+            #pragma omp for 
+                for (int i=2;i<num;i++){
+                    FermatStruct data = makeFS(i,num);
+                    if(modularSpace(&data)%num!=i){
+                        // printf("%d is a witness for %d.\n",i,num);
+                        // return; 
+                    }
+                }
+            #pragma omp critical
+            global_sum += privat_sum;
         }
         printf("%d is a Carmichael number.\n",num);
         return;
