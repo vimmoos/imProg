@@ -85,10 +85,9 @@ int superPrime (int num){
             num /= 10;
         }
     
-        for(int j=0;j!=index;j++){
+        for(int j=0;j!=index;j++)
             //check whether the number without a digits is prime or not 
             nPrime = prime(dropedDigit(digits,index,j))==1 ? nPrime+1 : nPrime ;
-        }
         //tValue is true only when nPrime it's equal to the lenght of the initial number 
         tValue= nPrime == index ? 1 : 0;
         // free the pointer digits

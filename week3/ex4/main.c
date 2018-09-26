@@ -57,7 +57,6 @@ int modularSpace (FermatStruct *data){
         int tValueA = data->expo%2==0 ? 1 : -1;
         int tValueB = data->base/data->module>=1 ? 1 : 0;
         int Truth = tValueA-tValueB;
-        //printf("\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n",data->module,data->temp,data->expo,data->base,tValueA,tValueB,Truth);
         switch (Truth){
             case 1: // this is the case when tValueA is true and tValueB is false
                 data->expo/=2;
