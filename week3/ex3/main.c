@@ -115,3 +115,5 @@ int main (int argc, char** argv){
     printf("%d\n",nSuperPrime(x));
     return 0; 
 }
+
+// htc@veracles.nl 
