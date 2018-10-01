@@ -9,19 +9,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "../../lib/utils.h"
-// this function return the sum of all divisor of n 
-int divisorOfN (int n){
-    int sum=0;
-    for (int i=n/2;i>=1;i--){
-        sum = n%i==0 ? sum+i : sum;  
+
+void *safeMalloc (int sz){
+    void *p= malloc(sz);
+    if(p==NULL){
+        printf("error cannot alloc %d",sz);
+        exit(EXIT_FAILURE);
     }
-    return sum;
-} 
-//just scan and print yes if the sum of the divisor is equal to the reverse input number
+    return p;
+}
+
+int *intAlloc (int n){
+    return safeMalloc(sizeof(int)*n);
+}
+
+typedef struct RecursionStruct{
+    int nFunc;
+    int value;
+    int *array;
+    int index;
+}RecursionStruct;
+
+RecursionStruct makeFS (int n, int index){
+    RecursionStruct data;
+    data.nFunc = n;
+    data.value = value;
+    data.array = intAlloc(index);
+    data.index = 0;
+    return data;
+}
+
+
+
+int recursion (RecursionStruct *data){
+    if(data->index == data->value) return data;
+    if(data->value<data->nFunc) {
+        data->array[data->index] = data->value;
+        data->index += 1 ;
+        return recursion(data)
+    }else{
+        
+    }
+
+}
 int main (int argc, char** argv){
-    int x;
-    scanf("%d",&x);
-    printf("%s\n",Revertnumber(x)==divisorOfN(x) ? "YES" : "NO");
+
     return 0; 
 }
