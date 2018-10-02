@@ -81,5 +81,6 @@ int main (int argc, char** argv){
     swappingData data = makeFS(sz);
     collectInput(&data);
     printf("%s\n",checkAsc(&data)==1 ? "YES" : "NO");
+    free(data.array);
     return 0; 
 }

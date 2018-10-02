@@ -30,28 +30,22 @@ typedef struct RecursionStruct{
     int index;
 }RecursionStruct;
 
-RecursionStruct makeFS (int n, int index){
+RecursionStruct makeFS (int n, int index,int value){
     RecursionStruct data;
     data.nFunc = n;
     data.value = value;
     data.array = intAlloc(index);
-    data.index = 0;
+    data.index = value;
     return data;
 }
 
-
-
-int recursion (RecursionStruct *data){
-    if(data->index == data->value) return data;
-    if(data->value<data->nFunc) {
-        data->array[data->index] = data->value;
-        data->index += 1 ;
-        return recursion(data)
-    }else{
-        
-    }
-
+int recursion(RecursionStruct *data){
+    if(data->)
+    return;
 }
+
+
+
 int main (int argc, char** argv){
 
     return 0; 
