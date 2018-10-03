@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-void *safeMalloc (int sz){
-    void *p= malloc(sz);
+void *safeCalloc (int sz){
+    void *p= calloc(sz,sizeof(int));
     if(p==NULL){
         printf("error cannot alloc %d",sz);
         exit(EXIT_FAILURE);
@@ -19,34 +19,25 @@ void *safeMalloc (int sz){
     return p;
 }
 
-int *intAlloc (int n){
-    return safeMalloc(sizeof(int)*n);
+int *intCalloc (int n){
+    return safeCalloc(sizeof(int)*n);
 }
 
-typedef struct RecursionStruct{
-    int nFunc;
-    int value;
-    int *array;
-    int index;
-}RecursionStruct;
-
-RecursionStruct makeFS (int n, int index,int value){
-    RecursionStruct data;
-    data.nFunc = n;
-    data.value = value;
-    data.array = intAlloc(index);
-    data.index = value;
-    return data;
+int recursion(int n,int i,int *p){
+    if(i<n) return i;
+    if(p[i]==0){
+        for(int j=1;j<=n;j++){
+            if(j%2 == 0) p[i]-= j*recursion(n,i-j,p);
+            else p[i]+= j*recursion(n,i-j,p);
+        }
+    }
+    return p[i];
 }
-
-int recursion(RecursionStruct *data){
-    if(data->)
-    return;
-}
-
-
 
 int main (int argc, char** argv){
-
+    int n,i;
+    scanf("%d %d",&n,&i);
+    int *p= intCalloc(i);
+    printf("%d\n",recursion(n,i,p));
     return 0; 
 }

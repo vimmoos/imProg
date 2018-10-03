@@ -2,7 +2,7 @@
 
 CC = gcc
 CFLAGS = --pedantic -Wall -O2
-LIBS = .
+LIBS = 
 
 all: dev
 
