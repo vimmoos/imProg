@@ -11,6 +11,7 @@
 #include <math.h>
 #include <string.h>
 
+// define all the struct 
 
 typedef struct Person{
     char *name;
@@ -29,8 +30,21 @@ typedef struct Problem{
     char *pattern;
     int **solutions;
 }Problem;
-void *safeMalloc (int sz)
-char *charAlloc (int n)
+
+//declaration of the headers 
+void *safeMalloc (int sz);
+char *charAlloc (int n);
+int *intAlloc (int n);
+Person *PersonAlloc(int sz);
+Problem makeP(char *cp);
+Database makeDB(int maxSZ);
+void addRecordDB(Database *dbp, Person record);
+void parsePerson (char *cp, Database *dbp);
+void printDb(Database db);
+void parseDB(Database *dbp);
+void printProblem(Problem P);
+
+// define functions body
 void *safeMalloc (int sz){
     void *p= malloc(sz);
     if(p==NULL){
@@ -48,10 +62,6 @@ char *charAlloc (int n){
 int *intAlloc (int n){
     return safeMalloc(sizeof(int)*n);
 }
-
-
-Person *PersonAlloc(int sz);
-
 
 Problem makeP(char *cp){
     Problem P;
@@ -117,6 +127,10 @@ void printProblem(Problem P){
     printf("\t%s\n",P.pattern);
     return;
 }
+
+
+
+
 
 
 int main (int argc, char** argv){
