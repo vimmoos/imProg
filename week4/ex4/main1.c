@@ -16,12 +16,15 @@ void putALotsOfChar(int n){
     }
 }
 int main (int argc, char** argv){
-    printf("ATCG\n3\nfaggi o:");
-    putALotsOfChar(2048);
+    putALotsOfChar(2222222);
+    printf("\n3\nfaggi o:");
+    putALotsOfChar(22222222);
     printf("\nmimm o:");
-    putALotsOfChar(2048);
+    putALotsOfChar(115048);
+    printf("ATCG");
     printf("\nban do:");
-    putALotsOfChar(2048);
+    printf("ATCG");
+    putALotsOfChar(115048);
     printf("\n");
     return 0; 
 }

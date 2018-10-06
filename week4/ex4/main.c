@@ -11,7 +11,20 @@
 #include <math.h>
 #include <string.h>
 
+
+
 // define all the struct 
+typedef struct Pattern{
+    char* pattern;
+    int size;
+    int cursor;
+}Pattern;
+
+typedef struct Buff{
+    char *buffer;
+    int size;
+    int cursor;
+}Buff;
 
 typedef struct Person{
     char *name;
@@ -22,7 +35,6 @@ typedef struct Person{
     int sizeS;
 }Person;
 
-
 typedef struct Database{
     Person *data;
     int size;
@@ -31,11 +43,8 @@ typedef struct Database{
 
 typedef struct Problem{
     Database db;
-    char *pattern;
-    int sizeP;
+    Pattern pattern;
 }Problem;
-
-
 
 //declaration of the headers 
 
@@ -47,19 +56,18 @@ int *intAlloc (int n);
 
 Person *PersonAlloc(int sz);
 
-Problem makeP(char *cp);
+Problem makeP(Pattern pattern);
 
 Database makeDB(int maxSZ);
 
 void addRecordDB(Database *dbp, Person record);
 
-void parsePerson (char *cp, Database *dbp);
+void parsePerson(Buff *buffer , Database *dbp);
 
 void printDb(Database db);
 
-void parseDB(Database *dbp);
+Database parseDB();
 
-void printProblem(Problem P);
 
 void setProblem(Problem *P,Database db);
 
@@ -94,18 +102,47 @@ Person *PersonAlloc(int sz){
 }
 // resize an int pointer 
 int *reAllocIntPointer(int *p,int size){
-    return (int *) realloc(p,size*2);
+    size_t new_size = size;
+    void *tmp = realloc(p, new_size * sizeof *p);
+    if ( tmp == NULL ) {
+        exit(EXIT_FAILURE);
+    }   
+    p = tmp;      
+    return p;
 }
 // resize a char pointer 
-char *reAllocIntPointer(char *p,int size){
-    return (char *) realloc(p,size*2);
+char *reAllocCharPointer(char *p,int size){
+    size_t new_size = size;
+    void *tmp = realloc(p, new_size * sizeof *p);
+    if ( tmp == NULL ) {
+        exit(EXIT_FAILURE);
+    }   
+    p = tmp;      
+    return p;
+}
+
+// make a Buffer, charAlloc the char * then initialize size and cursor
+Buff makeBuff(){
+    Buff buffer;
+    buffer.buffer = charAlloc(2);
+    buffer.size = 1;
+    buffer.cursor = 0; 
+    return buffer;
 }
 
 // make the P and append the char *pattern
-Problem makeP(char *cp){
+Problem makeP(Pattern pattern){
     Problem P;
-    P.pattern = cp;
+    P.pattern = pattern;
     return P;
+}
+
+Pattern makePattern(){
+    Pattern pattern;
+    pattern.pattern = charAlloc(2);
+    pattern.size = 1;
+    pattern.cursor = 0;
+    return pattern;
 }
 
 // make the database, 
@@ -159,8 +196,12 @@ void freeDB(Database db){
     return;
 }
 //free pattern pointer 
-void freeProblem(Problem P){
-    free(P.pattern);
+void freeProblem(Pattern pattern){
+    free(pattern.pattern);
+    return;
+}
+void freeBuffer(Buff buffer){
+    free(buffer.buffer);
     return;
 }
 
@@ -180,15 +221,16 @@ void addRecordDB(Database *dbp, Person record){
     return;
 }
 
-// this function create a new Person
-void parsePerson (char *cp, Database *dbp){
+
+ // this function create a new Person
+void parsePerson (Buff *buffer, Database *dbp){
     Person record;
     // alloc the name and genome at the length of cp which is the pattern 
-    record.name = charAlloc(strlen(cp));
-    record.genome = charAlloc(strlen(cp));
+    record.name = charAlloc(strlen(buffer->buffer));
+    record.genome = charAlloc(strlen(buffer->buffer));
     // translates to parse whatever untill : then : then another string
     char prototype[9] = "%[^:]:%s";
-    if (sscanf(cp, prototype , record.name, record.genome) != 2) exit(EXIT_FAILURE);
+    if (sscanf(buffer->buffer, prototype , record.name, record.genome) != 2) exit(EXIT_FAILURE);
     // initialize the sizeG at the length of the genome 
     record.sizeG = strlen(record.genome);
     // initilize the sizeS at 1 
@@ -200,28 +242,6 @@ void parsePerson (char *cp, Database *dbp){
     return;
 }
 
-//TODO rewrite better this function 
-//  start parsing the stdin
-void parseDB(Database *dbp){
-    // scan how many people you want 
-    int sz=0;
-    scanf("%d",&sz);
-    //the ninitialize the size of the database 
-    dbp->size = sz;
-    // create two buff 
-    char buf[11000];
-    char buf1[11000];
-    for(int i=0;i<sz;i++){
-        //scan two string 
-        scanf("%s%s",buf,buf1);
-        // then concat the two buf  
-        strncat(buf," ",10000);
-        strncat(buf,buf1,10000);
-        // and parse a new person 
-        parsePerson(buf ,dbp);
-    }    
-    return;
-}
 
 
 // this function just set a solution
@@ -253,7 +273,7 @@ void setProblem(Problem *P,Database db){
     //printf("length pattern");
     //printf("%d\n",strlen(P->pattern));
     // inizitalize sizeP at length of the pattern 
-    P->sizeP = strlen(P->pattern);
+    P->pattern.size = strlen(P->pattern.pattern)-1;
     return;
 }
 
@@ -264,21 +284,21 @@ void solveProblem(Problem *P){
     for(int i=0 ; i < P->db.size ; i++){
         //printf("\tloop n%d\n",i);
         // then loop on every single char of the genome so j is our genome char  
-        for(int j=0; j <= (P->db.data[i].sizeG) - (P->sizeP);j++){
+        for(int j=0; j <= (P->db.data[i].sizeG) - (P->pattern.size)+1;j++){
             // if we already found a solution just break we need just one 
             if(P->db.data[i].cursorS!=0) break;
             ncheck = 0;
             //printf("\t\t\tloop n j %d\n",j);
             // loop on every single char of the pattern so k is our pattern char 
-            for(int k=0;k<P->sizeP;k++) {
-                //printf("\t\t\t\tloop n k %d\n",k);
+            for(int k=0;k<P->pattern.size;k++) {
+                //printf("\t\tloop n k %d\t\t%d\n",k,P->pattern.size);
                 // if the j + k goes out of the genome size break 
                 if(j+k >= P->db.data[i].sizeG) break;
                 // check if the pattern char match with the genome char 
-                if(P->pattern[k] == P->db.data[i].genome[j+k]) {
+                if(P->pattern.pattern[k] == P->db.data[i].genome[j+k]) {
                     ncheck++;
                     // if we have checked all the pattern and it all char matches we can set the solution
-                    if(ncheck==P->sizeP) setSolution(P,i,j);
+                    if(ncheck==P->pattern.size) setSolution(P,i,j);
                 }else break;
             }
         }
@@ -286,19 +306,53 @@ void solveProblem(Problem *P){
     return;
 }
 
+//  start parsing the stdin
+Database parseDB(){
+    // scan how many people you want 
+    int sz=0;
+    scanf("%d",&sz);
+    scanf("\n");
+    //then initialize the database 
+    Database db = makeDB(sz);
+    //create a struct Buff 
+    for(int i=0;i<sz;i++){
+        Buff buffer = makeBuff();
+        do {
+            if(buffer.cursor >= buffer.size){
+                buffer.size*=2;
+                buffer.buffer = reAllocCharPointer(buffer.buffer,buffer.size);
+            } 
+            buffer.buffer[buffer.cursor] = getchar();
+            buffer.cursor+=1;
+        }while(buffer.buffer[buffer.cursor-1] != '\n');
+        parsePerson(&buffer,&db);
+        freeBuffer(buffer);
+    }
+    return db;
+}
+
+
+Pattern parsePattern(){
+    Pattern pattern = makePattern();
+    do {
+        if(pattern.cursor >= pattern.size){
+            pattern.size*=2;
+            pattern.pattern = reAllocCharPointer(pattern.pattern,pattern.size);
+        } 
+        pattern.pattern[pattern.cursor] = getchar();
+        pattern.cursor+=1;
+    }while(pattern.pattern[pattern.cursor-1] != '\n');
+    return pattern;
+}
+
 // this is the core function 
 void structManager(){
-    // charAlloc the pattern  
-    char *pattern = charAlloc(12048);
-    scanf("%s",pattern);
+    Pattern pattern = parsePattern();
     // make the Problem
     Problem P = makeP(pattern);
-    printProblem(P);
-    // make the Database 
-    Database db = makeDB(12048);
-    // parse the Database
-    parseDB(&db);
-    printDb(db);
+    // make and parse the Database 
+    Database db = parseDB();
+    //printDb(db);
     // set the Problem 
     setProblem(&P,db);
     // solve the Problem 
@@ -307,14 +361,14 @@ void structManager(){
     printSolution(&P);
     // free all the possible pointers
     freeDB(db);
-    freeProblem(P);
+    freeProblem(pattern);
     return;
 }
 
 
 
 
-
+ 
 // the main just call the core function
 int main (int argc, char** argv){
     structManager();
