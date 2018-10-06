@@ -1,7 +1,7 @@
 # makefile
 
 CC = gcc
-CFLAGS = --pedantic -Wall -O2
+CFLAGS = -O2 -std=c99 -pedantic -Wall
 LIBS = 
 
 all: dev
