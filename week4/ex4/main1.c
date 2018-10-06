@@ -1,30 +1,44 @@
-/* JSON 
-{
-    'author':'massimilianoFalzari'
-    'studentNumber':'S3459101'
-    'date':'September2018'
-    'gitRepo':'imperativeProgramming' 
-} 
-*/ 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <string.h>
 
-void putALotsOfChar(int n){
-    for(int i=0;i<n;i++){
-        putchar('A');
-    }
+// resize a char pointer 
+char *reAllocCharPointer(char *p,int size){
+    size_t new_size = size;
+    void *tmp = realloc(p, new_size * sizeof *p);
+    if ( tmp == NULL ) {
+        exit(EXIT_FAILURE);
+    }   
+    p = tmp;      
+    return p;
 }
-int main (int argc, char** argv){
-    putALotsOfChar(2222222);
-    printf("\n3\nfaggi o:");
-    putALotsOfChar(22222222);
-    printf("\nmimm o:");
-    putALotsOfChar(115048);
-    printf("ATCG");
-    printf("\nban do:");
-    printf("ATCG");
-    putALotsOfChar(115048);
-    printf("\n");
-    return 0; 
+
+void *safeMalloc (int sz){
+    void *p= malloc(sz);
+    if(p==NULL){
+        printf("error cannot alloc %d",sz);
+        exit(EXIT_FAILURE);
+    }
+    return p;
+}
+
+char *charAlloc (int n){
+    return safeMalloc(sizeof(char)*n);
+}
+
+
+
+
+int main(int argc,char **argv){
+    int size=0;
+    char *cp=charAlloc(10000);
+    do {
+        // just check if i need to resize or not 
+        // for every person scan all the name and the genome 
+        cp[size] = getchar();
+        size++;
+    }while(cp[size-1]!= '0');
+   
+    printf("%d",strlen(cp));
+    return 0 ;
 }
