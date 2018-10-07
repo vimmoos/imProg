@@ -3,8 +3,26 @@
 #include "arrLib.h"
 
 
-
-
+// resize a char pointer 
+int *reAllocIntPointer(int *p,int size){
+    size_t new_size = size;
+    void *tmp = realloc(p, new_size * sizeof *p);
+    if ( tmp == NULL ) {
+        exit(EXIT_FAILURE);
+    }   
+    p = tmp;      
+    return p;
+}
+// resize a char pointer 
+char *reAllocCharPointer(char *p,int size){
+    size_t new_size = size;
+    void *tmp = realloc(p, new_size * sizeof *p);
+    if ( tmp == NULL ) {
+        exit(EXIT_FAILURE);
+    }   
+    p = tmp;      
+    return p;
+}
 
 
 void *safeMalloc (int sz){

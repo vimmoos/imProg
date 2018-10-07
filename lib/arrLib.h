@@ -7,4 +7,8 @@ char *charAlloc (int n);
 
 int *intAlloc (int n);
 
+int *reAllocIntPointer(int *p,int size);
+
+char *reAllocCharPointer(char *p,int size);
+
 #endif
