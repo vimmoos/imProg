@@ -15,130 +15,125 @@
 #include "../../lib/arrLib.h"
 
 
-typedef struct Event{
+typedef struct Event Event;
+
+typedef struct Fun Fun;
+
+void fun3(Event *e );
+
+void fun2(Event *e );
+
+void fun1(Event *e );
+
+void fun0(Event *e );
+
+struct Event{
     int param;
-    FunQ *qp;
-}Event;
-// forever by value 
-typedef struct Fun{
-    Event (*funP)(Event);
+    Fun *fp; // the function which will execute the event 
+    int kill;
+};
+
+struct Fun{
+    void (*funP)(Event*);
     char *name;
-}Fun;
+    Fun *nextP;
+};
 
-typedef struct FunQ{
-    Fun *queue;
-    int cursor;
-    int size;
-}FunQ;
-
-
-Event makeEvent(int para,FunQ *qp){
+Event makeEvent(int para,Fun *fp){
     Event ev;
     ev.param = para;
-    ev.qp = qp;
+    ev.fp = fp;
+    ev.kill = 0;
     return ev;
 }
 
 
-
-Fun makeFun(char *name,Event (*funP)(Event)){
+Fun makeFun(char *name, void (*funP)(Event*)){
     Fun f;
-    f.name = name;
+    int i=i;
+    printf("\t\t%d\n",i);
+    f.name = charAlloc(strlen(name)+1);
+    for(i;i<=strlen(name);i++){
+        printf("furby!\n");
+        f.name[i] = name[i];
+    }
     f.funP = funP;
+
+    f.nextP = NULL;
     return f;
 }
 
-FunQ makeFunQ(int sz){
-    FunQ q;
-    q.cursor = 0;
-    q.size = sz;
-    q.queue = safeMalloc(sizeof(Fun)*sz);
-    return q;
-}
+//@callback
+void fun0(Event *e ){ 
+    // exec body
+    printf("Fun0, %d \n", e->param);
+    e->param+=1;// inc count
+    // construct next
+    Fun f1 = makeFun("test1",fun1);
+    // set next on the event's environment Fun
+    e->fp->nextP = &f1;
+    return ; 
+} 
 
-Fun *reAllocFunPointer(Fun *fp,int size ){
-    size_t new_size = size ;
-    void *tmp = realloc(fp, new_size * sizeof(Fun));
-    if ( tmp == NULL ) {
-        exit(EXIT_FAILURE);
-    }   
-    fp = tmp;      
-    return fp;
-}
+void fun1(Event *e ){ 
+    printf("Fun1, %d \n", e->param);
+    e->param+=1;
+    Fun f0 = makeFun("test0",fun0);
+    e->fp->nextP = &f0;
+    return; 
+} 
+void fun2(Event *e ){ 
+    
+    printf("Fun2, %d \n", e->param);
+    e->param+=1;
+    
+    Fun f3 = makeFun("test3",fun3);
+    e->fp->nextP = &f3;
+    //e->fp->nextP->funP(e);
+   printf("In fun2b =====: %s\n",e->fp->nextP->name);
+    return; 
+} 
 
-void enQ(FunQ *qp,Fun f){
-    if(qp->cursor>=qp->size) {
-        qp->size += 1;
-        reAllocFunPointer(qp->queue,qp->size);
-    }
-    qp->queue[qp->cursor] = f;
-    qp->cursor += 1;
+void fun3(Event *e ){ 
+    printf("\tFun3, %d \n", e->param);
+    e->param+=1;
+    e->kill = 1;
+    return; 
+} 
+
+
+
+
+int hasNext(Fun *f){
+    return f->nextP == NULL ? 0 : 1 ;
+} 
+
+/**
+ * Execute a FULL chain of functions.
+ * Infinite loop ready if function are expansiveEvent fun3(Event e )
+ * ends as soon as all functions are executed, SYNC,
+ * so that t might be infite :)
+ * */
+void  exeF(Event *buffer){
+    printf("init buffer:\t%d\n",buffer->param);
+    Event *ev = buffer;
+    int s;
+    do{
+        ev->fp->funP(ev);
+        printf("DONE: %s \n",ev->fp->name);
+        ev->fp = ev->fp->nextP;
+                    
+    }while(!ev->kill);    
+
     return;
 }
 
-int hasNext(FunQ *qp){
-    return qp->cursor >= qp->size ? 0 : 1 ;
-} 
-
-
-Event exeQ(FunQ *qp,Event ev0){
-    qp->cursor = 0 ;
-    while(hasNext(qp)){
-        printf("evalueting");
-        ev0 = qp->queue[qp->cursor].funP(ev0);
-        qp->cursor += 1; 
-    }    
-    return ev0;
-}
-
-
-
-// typedef struct 
-Event fun0(Event e ){ 
-    Fun f1 = makeFun("test",fun1);
-    printf("F0='Value of a is %d'\n", e.param*e.param);
-    enQ(e.qp,f1);
-    
-    return e; 
-} 
-
-Event fun1(Event e ){ 
-   
-    printf("Value of a is %d\n", e.param);
-    return e; 
-} 
-Event fun2(Event e ){ 
-
-    printf("Value of a is %d\n", e.param*2);
-    return e; 
-} 
-
-Event fun3(Event e ){ 
-    printf("Value of a is %d\n", e.param*e.param/2);
-    return e; 
-} 
 
 
 
 int main(int argc, char  **argv){
-    // void (*funP)(int) = fun;
-    // funP(10);
-    // void (*funPA[])(int) = {fun,fun1,fun2,fun3};
-    // int c;
-    // scanf("%d",&c);
-    // for(int i=0;i<4;i++){
-    //     funPA[i](c);
-    // }
-    
-        
-    // Fun f0 = makeFun("test",fun0);
-    // Fun f2 = makeFun("test",fun2);
-    // Fun f3 = makeFun("test",fun3);
-
-    // FunQ evLoop = makeFunQ(2);
-    // Event ev0 = makeEvent(2,&evLoop);
-    // enQ(&evLoop,f0);
-    // ev = exeQ(&evLoop,ev);
-    // printf("%d\n",ev.param);
+    Fun f2 = makeFun("start",fun2);
+    Event ev0 = makeEvent(0,&f2);
+    exeF(&ev0);
     return 0;
 }
