@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "utils.h"
 
 
@@ -37,3 +38,20 @@ int Revertnumber (int x){
     }
     return Rx;
 }
+
+int matchPString(char *string,char *pattern){
+    int cnt = 0;
+    int slen = strlen(string);
+    int plen = strlen(pattern);
+    if(slen>plen){
+        for(int i=0;i<plen;i++){
+            if(pattern[i] == string[i]) cnt++;
+        }
+    }else{
+        for(int i=0;i<slen;i++){
+            if(pattern[i] == string[i]) cnt++;
+        }
+    }
+    return cnt == slen || cnt == plen ? 1 : 0;
+}
+

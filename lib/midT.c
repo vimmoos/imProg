@@ -12,12 +12,19 @@ IntArray makeIArr(int sz){
     return intArr;
 }
 
-void setIValue(IntArray *intArr){
-
+void appendIValue(IntArray *intArr,int value){
+    if(intArr->cursor >= intArr->size) reAllocIntArray(intArr);
+    intArr->array[intArr->cursor]= value;
+    intArr->cursor += 1; 
     return;
 }
 
-void printIV(IntArray intArr, int index){
+void printI(IntArray intArr){
+    printf("[");
+    for(int i=0;i<intArr.size;i++){
+        printf("%d,",intArr.array[i]);
+    }
+    printf("]\n");
     return;
 }
 
@@ -36,12 +43,21 @@ CharArray makeCArr(int sz){
     return charArr;
 }
 
-void setCValue(CharArray *charArr,char c,int cursor){
-    charArr->array[cursor]=
+void appendCValue(CharArray *charArr,char c){
+    if(charArr->cursor >= charArr->size) reAllocCharArray(charArr);
+    charArr->array[charArr->cursor]= c;
+    charArr->cursor += 1; 
     return;
 }
 
-void printCV(CharArray charArr, int index);
+void printC(CharArray charArr){
+    printf("[");
+    for(int i=0;i<strlen(charArr.array);i++){
+        printf("%c,",charArr.array[i]);
+    }
+    printf("]\n");
+    return;
+}
 
 void reAllocCharArray( CharArray *charArr){
     charArr->size *= 2;

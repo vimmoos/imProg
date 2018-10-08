@@ -1,5 +1,5 @@
 #ifndef MIDTLIB_H
-#define MIDTIB_H
+#define MIDTLIB_H
 
 
 typedef struct IntArray{
@@ -11,11 +11,11 @@ typedef struct IntArray{
 
 IntArray makeIArr(int sz);
 
-void setIValue(IntArray *intArr);
+void appendIValue(IntArray *intArr,int value);
 
-void printIV(IntArray intArr, int index);
+void printI(IntArray intArr);
 
-void reAllocIntArray( IntArray *intArr, int sz);
+void reAllocIntArray( IntArray *intArr);
 
 
 typedef struct CharArray{
@@ -26,11 +26,11 @@ typedef struct CharArray{
 
 CharArray makeCArr(int sz);
 
-void setCValue(CharArray *charArr);
+void appendCValue(CharArray *charArr,char c);
 
-void printCV(CharArray charArr, int index);
+void printC(CharArray charArr);
 
-void reAllocCharArray( CharArray *charArr, int sz);
+void reAllocCharArray( CharArray *charArr);
 
 
 #endif

@@ -12,4 +12,5 @@ void swapInt (int *A,int *B);
 
 int Revertnumber (int x);
 
+int matchPString(char *string,char *pattern); 
 #endif
