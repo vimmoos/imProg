@@ -134,10 +134,10 @@ int main(int argc, char  **argv){
     // Fun f2 = makeFun("test",fun2);
     // Fun f3 = makeFun("test",fun3);
 
-    FunQ evLoop = makeFunQ(2);
-    Event ev0 = makeEvent(2,&evLoop);
-    enQ(&evLoop,f0);
-    ev = exeQ(&evLoop,ev);
-    printf("%d\n",ev.param);
+    // FunQ evLoop = makeFunQ(2);
+    // Event ev0 = makeEvent(2,&evLoop);
+    // enQ(&evLoop,f0);
+    // ev = exeQ(&evLoop,ev);
+    // printf("%d\n",ev.param);
     return 0;
 }
