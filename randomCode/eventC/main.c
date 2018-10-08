@@ -36,6 +36,7 @@ Event makeEvent(int para,FunQ *qp){
     Event ev;
     ev.param = para;
     ev.qp = qp;
+    return ev;
 }
 
 
