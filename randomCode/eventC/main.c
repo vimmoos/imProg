@@ -50,10 +50,8 @@ Event makeEvent(int para,Fun *fp){
 
 Fun makeFun(char *name, void (*funP)(Event*)){
     Fun f;
-    int i=i;
-    printf("\t\t%d\n",i);
     f.name = charAlloc(strlen(name)+1);
-    for(i;i<=strlen(name);i++){
+    for(int i=0;i <= strlen(name);i++){
         printf("furby!\n");
         f.name[i] = name[i];
     }
