@@ -42,7 +42,7 @@ CharArray makeCArr(int sz){
     charArr.cursor = 0;
     return charArr;
 }
-
+//TODO add string terminator 
 void appendCValue(CharArray *charArr,char c){
     if(charArr->cursor >= charArr->size) reAllocCharArray(charArr);
     charArr->array[charArr->cursor]= c;

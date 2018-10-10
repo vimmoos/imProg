@@ -74,7 +74,7 @@ NQueens makeNQs(int sz){
 }
 
 
-//TODO string collection struct 
+//   TODO string collection struct 
 //              NOTE
 // the lenght of the char **options must be equal or at least minor than  sz 
 // otherwise a seg fault will stop the program

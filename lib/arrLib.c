@@ -2,9 +2,8 @@
 #include <stdio.h>
 #include "arrLib.h"
 
-
 // resize a char pointer 
-int *reAllocIntPointer(int *p,int size){
+char *reAllocCharPointer(char *p,int size){
     size_t new_size = size;
     void *tmp = realloc(p, new_size * sizeof *p);
     if ( tmp == NULL ) {
@@ -13,8 +12,9 @@ int *reAllocIntPointer(int *p,int size){
     p = tmp;      
     return p;
 }
+
 // resize a char pointer 
-char *reAllocCharPointer(char *p,int size){
+int *reAllocIntPointer(int *p,int size){
     size_t new_size = size;
     void *tmp = realloc(p, new_size * sizeof *p);
     if ( tmp == NULL ) {
@@ -34,10 +34,12 @@ void *safeMalloc (int sz){
     return p;
 }
 
-char *charAlloc (int n){
-    return safeMalloc(sizeof(char)*n);
-}
+
 
 int *intAlloc (int n){
     return safeMalloc(sizeof(int)*n);
+}
+
+char *charAlloc (int n){
+    return safeMalloc(sizeof(char)*n);
 }
