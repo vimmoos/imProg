@@ -1,32 +1,17 @@
-/* JSON 
-{
-    'author':'massimilianoFalzari'
-    'studentNumber':'S3459101'
-    'date':'September2018'
-    'gitRepo':'imperativeProgramming' 
-} 
-*/ 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
-typedef struct Pangram{
-    int *frequencyP;
-    int size;
-    int maxD;
-}Pangram;
+#include <stdlib.h>
+#include <stdio.h>
 
 typedef struct NPP{
     int solutions;
     int a;
     int b;
 }NPP;
-
 void *safeCalloc (int sz){
     void *p= calloc(sz,sizeof(int));
     if(p==NULL){
         printf("error cannot alloc %d",sz);
-        exit(EXIT_FAILURE);
+        exit(2);
     }
     return p;
 }
@@ -35,16 +20,7 @@ int *intAlloc (int n){
     return safeCalloc(sizeof(int)*n);
 }
 
-// resize a char pointer 
-int *reAllocIntPointer(int *p,int size){
-    size_t new_size = size;
-    void *tmp = realloc(p, new_size * sizeof *p);
-    if ( tmp == NULL ) {
-        exit(EXIT_FAILURE);
-    }   
-    p = tmp;      
-    return p;
-}
+
 //sqroot calculation
 int sqroot(int k){
     int x=1;
@@ -74,13 +50,23 @@ int prime (int num){
     return tValue;
 }
 
+int powe(int x,int y){
+	int result=1;
+	if(y==0) return 1;
+	for(int i=0;i<y;i++) result *= x;
+	return result;
+}
 
-Pangram makePangram(){
-    Pangram pp;
-    pp.size = 10;
-    pp.maxD = 1;
-    pp.frequencyP = intAlloc(pp.size);
-    return pp;
+int digitN(int n) {
+    if (n >= 100000000) return 9;
+    if (n >= 10000000) return 8;
+    if (n >= 1000000) return 7;
+    if (n >= 100000) return 6;
+    if (n >= 10000) return 5;
+    if (n >= 1000) return 4;
+    if (n >= 100) return 3;
+    if (n >= 10) return 2;
+    return 1;
 }
 
 NPP makeNPP(){
@@ -98,44 +84,42 @@ NPP collectInput(){
     return nP ;
 }
 
-int extractFD(Pangram *p , int n){
-    int digit;
+
+int isPangram(int n,int c){
+    int *frequency = intAlloc(10);
+    int digit,sum=0,count=0;
     //printf("number : %d\t",n);
-    while(n){
-        digit = n%10; 
-        if(digit){
-            if(p->maxD < digit ) p->maxD = digit;
-            //printf("%d\t",p->maxD);
-            if(p->frequencyP[digit]==0) p->frequencyP[digit] = 1;
-            else {
-                //printf("\n");
-                return 0 ;
-            }
-            
-        }
+    for(int i=1;i <= c;i++){
+        digit = n%10;
+        if(digit > c) break;
+        if(!digit) break;
+        if(frequency[digit]!=0) break;
+        frequency[digit] = 1;
+        sum += digit;
+        count += i;
         n /= 10;
     }
-    //printf("\n");
+    free(frequency);
+    if(n) return 0;
+    if(sum % 3 == 0) return 0;
+    if(sum != count ) return 0;
     return 1;
 }
-
-int isPangram(int n ){
-    Pangram p = makePangram();
-    if(!extractFD(&p,n)) return 0 ;
-    for(int i = 1;i <= p.maxD;i++){
-        //printf("frequency of the digit %d == %d\n",i,p.frequencyP[i]);
-        if(!p.frequencyP[i]) return 0;
-    }
-    //printf("number %d is a pangram\n",n);
-    free(p.frequencyP);
-    return 1;
-}
-
 
 void nPangramP(NPP *nP){
-    for(int i = nP->a ; i <= nP->b ; i++){
-        if(isPangram(i)) if(prime(i)) nP->solutions += 1;
+    // change the lower and the upper bound because we can easily see that if a number has 3 or less digit 
+    // is impossible that this number is  a pangramPrimes because it will be divisible by 3 (logical deduction from the definition)
+    // on the other side if we a number which have more than 7 digit is impossible that this nummber is a PangramPrime
+    // because it will be divisible by 3 (logical deduction from the definition)
+    
+    if(digitN(nP->b) > 4) {
+        if(digitN(nP->a) < 4 ) nP->a = powe(10,3);
+        if(digitN(nP->b) > 7) nP->b = powe(10,7);
     }
+    
+    if(nP->a %2 == 0) nP->a += 1;
+    for(int i = nP->a; i <= nP->b ; i+=2) if(isPangram(i,digitN(i))) if(prime(i)) nP->solutions += 1;
+    
     return;
 }
 
@@ -149,8 +133,7 @@ void structManager(){
 
 
 
-int main (int argc, char** argv){
-    //if(isPangram(7652403)) printf("bonaa\n");
+int main (int argc, char **argv){
     structManager();
-    return 0; 
+    return 0;
 }
