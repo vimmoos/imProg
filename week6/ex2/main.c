@@ -10,7 +10,15 @@
 #include <stdlib.h>
 #include <math.h>
 
+typedef struct Hist{
+    int *frequency;
+    int *value;
+    int cursor;
+    int size;
+}Hist;
+
+
 int main (int argc, char** argv){
-    structManager();
+ 
     return 0; 
 }
