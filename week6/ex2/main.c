@@ -104,29 +104,31 @@ void merge(int b,int m,int e, int *arr,int *tmp){
     printf("len a %d\t len b  %d\n",lenA,lenB);
     for(int k = 0 ; k < e-b; k ++) {
         tmp[k]= arr[k+b];
-        printf("array at %d  has value %d\n",k,arr[k]);
+        printf("array at %d  has value %d\n",k,arr[k+b]);
     }
     while(i < lenA && j < lenB){
-        if(tmp[i] <= tmp[m+j] ){
+        printf("dio quel dio porcon A %d B %d  and m === %d\n",tmp[i],tmp[lenA+j],lenA);
+        if(tmp[i] <= tmp[lenA+j] ){
             arr[index] = tmp[i];
             i++;
         }else{
-            arr[index] = tmp[m+j];
+            arr[index] = tmp[lenA+j];
             j++;
         }
         index++;
     }
+    printf("dio A %d B %d \n",tmp[i],tmp[m+j]);
     while (i < lenA){ 
         arr[index] = tmp[i]; 
         i++; 
         index++; 
     } 
     while (j < lenB){ 
-        arr[index] = tmp[m+j]; 
+        arr[index] = tmp[lenA+j]; 
         j++; 
         index++; 
     }
-    for(int k = 0 ; k < e-b;k++) printf("dio maiale %d\t",arr[k]);
+    for(int k = 0 ; k < e-b;k++) printf("dio maiale %d\t",arr[k+b]);
         printf("\n");
     return; 
 }
@@ -160,9 +162,11 @@ void whamsort(int len, int *a){
 
 int main (int argc, char** argv){
     Hist h = collectInput();
+    for(int k = 0 ; k < h.cursor ;k++) printf("dio canaglia %d\t\n",h.digits[k]);
     whamsort(h.cursor,h.digits);
     for (int i = 0 ; i < h.cursor;i++){
         printf("%d: \n",h.digits[i]);
     }
     return 0; 
 }
+
