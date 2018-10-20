@@ -10,25 +10,13 @@
 #include <stdlib.h>
 #include <math.h>
 
-typedef struct IntArray{
-    int *arr;
+typedef struct MajorityV{
+    int *digits;
+    int *frequency;
+    int cursor;
     int size;
-}IntArray;
-
-
-
-void *safeCalloc (int sz){
-    void *p= calloc(sz,sizeof(int));
-    if(p==NULL){
-        printf("error cannot alloc %d",sz);
-        exit(EXIT_FAILURE);
-    }
-    return p;
-}
-
-int *intAlloc (int n){
-    return safeCalloc(sizeof(int)*n);
-}
+    int lenI;
+}MajorityV;
 
 int *reAllocIntPointer(int *p,int size){
     size_t new_size = size;
@@ -39,55 +27,101 @@ int *reAllocIntPointer(int *p,int size){
     p = tmp;      
     return p;
 }
-void reAllocIntArray( IntArray *intArr,int value ){
-    intArr->size = value;
-    intArr->arr = reAllocIntPointer(intArr->arr,intArr->size);
+
+
+void *safeMalloc (int sz){
+    void *p= malloc(sz);
+    if(p==NULL){
+        printf("error cannot alloc %d",sz);
+        exit(EXIT_FAILURE);
+    }
+    return p;
+}
+
+
+
+int *intAlloc (int n){
+    return safeMalloc(sizeof(int)*n);
+}
+
+void reAllocIntArray(MajorityV *mv){
+    mv->size *= 2;
+    mv->digits = reAllocIntPointer(mv->digits,mv->size);
+    mv->frequency = reAllocIntPointer(mv->frequency,mv->size);
+    return;
+}
+
+void appendIValue(MajorityV *mv ,int value){
+    int exist = -1;
+    if(mv->cursor >= mv->size) reAllocIntArray(mv);
+    for(int i=0;i<mv->cursor;i++){
+        if(mv->digits[i] == value ) exist = i ;
+       
+    }
+    if(exist != -1 ){
+        mv->frequency[exist] += 1;
+        
+    }else{
+        
+        mv->digits[mv->cursor] = value;
+        mv->frequency[mv->cursor] = 1 ;
+        mv->cursor += 1 ;
+    }
     return;
 }
 
 
-void appendIValue(IntArray *intArr,int value){
-    if(value >= intArr->size) reAllocIntArray(intArr,value);
-    intArr->arr[value-1] += 1; 
+MajorityV makeMaj(){
+    MajorityV mV;
+    mV.cursor = 0;
+    mV.lenI = 0;
+    mV.size = 1;
+    mV.digits = intAlloc(mV.size);
+    mV.frequency = intAlloc(mV.size);
+    return mV;
+}
+
+
+void freeMaj(MajorityV mv){
+    free(mv.digits);
+    free(mv.frequency);
     return;
 }
 
-
-IntArray makeIArr(int sz){
-    IntArray intArr;
-    intArr.arr = intAlloc(sz);
-    intArr.size = sz;
-    return intArr;
-}
-
-void collectInput (){
-    IntArray frequency = makeIArr(1);
-    int n,max1 = 0,max2 = 0;
-    scanf("%d",&n);
-    if(max1==0) max1 = n;
-    scanf("%d",&n);
-    if(max2==0) max2 = n;
+MajorityV collectInput(){
+    int n;
+    MajorityV mv = makeMaj();
     scanf("%d",&n);
     do{
-        appendIValue(&frequency,n);
-        if(n != max1){
-            if(frequency.arr[n-1]>frequency.arr[max1-1]) max1 = n; 
-        }
-        if(n != max1 && n != max2 ){
-            if(frequency.arr[n-1]>frequency.arr[max2-1]) max2 = n; 
-        }
+        mv.lenI += 1; 
+        appendIValue(&mv,n);
         scanf("%d",&n);
-
-    }while(n != 0 );
-    printf("%d %d\n",max1,max2);
-    return;
-
+    }while( n != 0);
+    return mv;
 }
 
+void genMajority(MajorityV *mv,int maxV, int minV){
+    if(minV == 2 )printf("majority: ");
+    else printf("runner-up: ");
+    for(int i=0;i<mv->cursor;i++){
+        if(mv->frequency[i] * minV > mv->lenI && mv->frequency[i] * maxV < mv->lenI) {
+            printf("%d\n",mv->digits[i]);
+            if(minV == 2 ) genMajority(mv,2,4);
+            return;
+        }
+    }
+    printf("NONE\n");
+    return;
+}
 
-
+void structManager(){
+    MajorityV mv = collectInput();
+    genMajority(&mv,1,2);
+    freeMaj(mv);
+    return;
+}
 
 int main (int argc, char** argv){
-    collectInput();
+    structManager();
     return 0; 
 }
