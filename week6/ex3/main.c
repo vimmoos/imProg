@@ -9,20 +9,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+// define an array struct which will have an int pointer, an int size (used for dynamic reallocation)
+// and a cursor (used like an index for the int pointer) 
 typedef struct IntArr{
     int *arr;
     int size;
     int cursor;
 }IntArr;
-
-typedef struct BTree{
+//define an balanced binary search tree which will have an IntArr of nodes, a int nlayer( number of layers)
+// a int  root (the index of the current root), a int start (the starting point of the tree/subtree) 
+typedef struct BBSTree{
     IntArr nodes;
     int nlayer;
     int root;
     int start;
-}BTree;
-
+}BBSTree;
+// used for dynamic allocation of an int pointer 
 int *reAllocIntPointer(int *p,int size){
     size_t new_size = size;
     p = realloc(p, new_size * sizeof *p);
@@ -33,7 +35,7 @@ int *reAllocIntPointer(int *p,int size){
     return p;
 }
 
-
+//classic safeMalloc for a void pointer 
 void *safeMalloc (int sz){
     void *p= malloc(sz);
     if(p==NULL){
@@ -43,30 +45,27 @@ void *safeMalloc (int sz){
     return p;
 }
 
-
-
+// use safeMalloc for allocing an int pointer 
 int *intAlloc (int n){
     return safeMalloc(sizeof(int)*n);
 }
 
-
-void reAllocIntArray(BTree *t){
+// use for reallocing the IntArr 
+void reAllocIntArray(BBSTree *t){
     t->nodes.size *= 2;
     t->nodes.arr = reAllocIntPointer(t->nodes.arr,t->nodes.size);
     return;
 }
 
-
-
-void appendIValue(BTree *t ,int value){
+// dynamic apppending logic 
+void appendIValue(BBSTree *t ,int value){
     if(t->nodes.cursor >= t->nodes.size) reAllocIntArray(t);
     t->nodes.arr[t->nodes.cursor] = value;
     t->nodes.cursor +=1 ;
     return;
 }
 
-
-
+// initialize a new IntArr 
 IntArr makeIA(){
     IntArr iA;
     iA.cursor = 0 ;
@@ -75,13 +74,14 @@ IntArr makeIA(){
     return iA;
 }
 
-
-int findRootBT(BTree t){
-    return ((1<<t.nlayer)/ 2) -1; 
+// used to find the root of a subBBSTree of nlayer with an offset
+int findRootBT(BBSTree t){
+    return (((1<<t.nlayer)/ 2) - 1)+t.start; 
 }
 
-BTree makeBT(){
-    BTree t;
+// initialize a BBSTree 
+BBSTree makeBBST(){
+    BBSTree t;
     t.nodes = makeIA();
     t.start = 0 ;
     scanf("%d",&t.nlayer);
@@ -89,14 +89,16 @@ BTree makeBT(){
     return t;
 }
 
-void freeH(BTree t){
+// free all the nodes 
+void freeNodes(BBSTree t){
     free(t.nodes.arr);
     return;
 }
 
-BTree collectInput(){
+//collectin all the imput 
+BBSTree collectInput(){
     int n;
-    BTree t = makeBT();
+    BBSTree t = makeBBST();
     for(int i = 1 ; i < 1<<t.nlayer ; i++){
         scanf("%d",&n);
         appendIValue(&t,n);
@@ -104,7 +106,7 @@ BTree collectInput(){
     return t;
 }
 
-
+// merge function for the WhamSort 
 void merge(int b,int m,int e, int *arr,int *tmp){
     int i=0,j=0,index=b;
     int lenA = m-b  ;
@@ -133,7 +135,7 @@ void merge(int b,int m,int e, int *arr,int *tmp){
     return; 
 }
 
-
+// recursive WhamSort
 void recWhamsort(int p, int e, int *a, int *tmp){
     int i = p+1;
     while (i < e && a[i-1] <= a[i])  i++;
@@ -152,32 +154,47 @@ void whamsort(int len, int *a){
     free(tmp);
 }
 
-
-void recPrintT(BTree t){
+// recursive printing for the BBSTree
+void recPrintT(BBSTree t){
+    // safe private root i na viariable 
     int pRoot = t.root;
+    // if there are more then 1 layer do 
     if(t.nlayer > 1){
+        // decrement the number of layers
         t.nlayer -= 1;
+        // print that this is a tree 
         printf("Tree (");
-        t.root = findRootBT(t)+t.start ;
-       // printf("\n\tcalling SX part wiht root %d ==== and  start  %d\n",t.root,t.start);  
+        // find the left root of its subTree 
+        t.root = findRootBT(t); 
+        // recursive call
         recPrintT(t);
+        // than print the root of this tree 
         printf(") %d (",t.nodes.arr[pRoot]);
+        // set the offset for the right subTree
         t.start = pRoot+1;
-        t.root = findRootBT(t)+t.start ;
-       // printf("\n\t\t\tcalling DX part with root  %d ==== and  start %d\n",t.root,t.start);  
+        // find the root of the right subTree
+        t.root = findRootBT(t);
+        // recursive call
         recPrintT(t);
+        // ending of this tree 
         printf(")");
-
+    // if there are other subTree (child) print that this is a leaf
     }else printf("Leaf %d",t.nodes.arr[t.start]);
 }
 
-
-int main (int argc, char** argv){
-    BTree t = collectInput();
+// this function manage all the operation about the BBSTree 
+void treeManager(){
+    // build the BBSTree 
+    BBSTree t = collectInput();
     whamsort(t.nodes.cursor,t.nodes.arr);
+    // the recPrintT need a sorted permutation of the Tree 
     recPrintT(t);
     printf("\n");
+    freeNodes(t);
+    return;
+}
+
+int main (int argc, char** argv){
+    treeManager();
     return 0; 
 }
-// 4
-// 2 6 10 14 16 17 21 30 4 12 18 25 20 8 15
