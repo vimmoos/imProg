@@ -50,10 +50,11 @@ MissN makeM(){
 void printE(MissN m){
     for(int i=0;i<m.size;i++){
         if (m.arr[i]==0){
-            printf("%d",i);
+            printf("%d\n",i);
             return;
         }
     } 
+    printf("%d\n",m.size);
 }
 
 void collectInput(){
@@ -62,11 +63,11 @@ void collectInput(){
     MissN m = makeM();
     for(int i=0;i<n;i++){
         scanf("%d",&x);
-        if(x-1 >= m.size){
-            m.size = x;
+        if(x >= m.size){
+            m.size = x+1;
             m.arr = reAllocIntPointer(m.arr,m.size);
         }
-        m.arr[x-1] = 1;
+        m.arr[x] = 1;
     }
     printE(m);
 }
